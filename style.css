@@ -1,4 +1,4 @@
-table
+/*table
 {
     border-collapse : collapse;
 }
@@ -7,4 +7,34 @@ tr, td, th
 {
     border : solid black 1px;
     padding : 10px;
+}*/
+
+table tr th, table tr td
+{
+    text-align : center !important;
+}
+
+header
+{
+    padding-top : 65px;
+    padding-bottom : 65px;
+    text-transform : uppercase;
+    box-shadow : rgb(245, 245, 245) 0px 2px 0px 0px;
+}
+header h1{
+    text-align : center;
+}
+
+footer {
+    margin-top : 90px;
+}
+
+h2{
+    padding-top : 60px;
+    padding-bottom : 40px;
+}
+
+#content
+{
+    min-height : 450px;
 }
