@@ -1,14 +1,3 @@
-/*table
-{
-    border-collapse : collapse;
-}
-
-tr, td, th
-{
-    border : solid black 1px;
-    padding : 10px;
-}*/
-
 table tr th, table tr td
 {
     text-align : center !important;
@@ -16,6 +5,7 @@ table tr th, table tr td
 
 header
 {
+    background-color : #FAFAFA;
     padding-top : 65px;
     padding-bottom : 65px;
     text-transform : uppercase;
@@ -23,10 +13,6 @@ header
 }
 header h1{
     text-align : center;
-}
-
-footer {
-    margin-top : 90px;
 }
 
 h2{
@@ -37,4 +23,8 @@ h2{
 #content
 {
     min-height : 450px;
+}
+
+footer {
+    margin-top : 90px;
 }

@@ -2,18 +2,20 @@
 
 function getTables($ip, $bdd, $user, $pass) // RETURN TABLES AND CREATE SESSION WITH DB INFORMATIONS SENT BY CONNECTION FORM
 {
+    try{
+        $bdd_co = new PDO("mysql:host=$ip;dbname=$bdd;charset=utf8",$user,$pass);
+    }
+    catch(PDOException $e)
+    {
+        return null;
+    }
+
     $_SESSION['ip'] = $ip;
     $_SESSION['bdd'] = $bdd;
     $_SESSION['user'] = $user;
     $_SESSION['pass'] = $pass;
 
-    
-    try {
-        $bdd = new PDO("mysql:host=$ip;dbname=$bdd;charset=utf8",$user,$pass);
-    } catch(PDOException $e) {
-        echo $e->getMessage();
-    }
-    $req = $bdd->prepare("SHOW TABLES");
+    $req = $bdd_co->prepare("SHOW TABLES");
     $req->execute();
 
     return $req;
@@ -55,7 +57,9 @@ function addEntry($entry) // ADD ENTRY IN THE TABLE $entry['table']
     $string = "";
 
     foreach($entry as $value) // COMPLETE STRING FOR VALUES SQL
-    {
+    {   
+        $value = addslashes($value);
+
         if($i != $nb_fields) {
 
             $string = $string . "'$value',";
@@ -112,8 +116,9 @@ function modifEntry($entry) // MODIF ENTRY IN THE TABLE $entry['table']
 
     foreach($entry as $key => $value) // COMPLETE STRING FOR VALUES SQL
     {
+        $value = addslashes($value);
+        
         if($i != $nb_fields) {
-
             $string = $string .  "$key = '$value', ";
             $i++;
 

@@ -40,7 +40,7 @@ include('function.php'); ?>
             deleteEntry($_GET['table'], $_GET['sup'], $_GET['field_pk']);
         }
         
-        elseif(isset($_GET['table'])) { // DISPLAY FIELDS AND DATA OF THE TABLE 
+        elseif(isset($_GET['table']) && isset($_SESSION['bdd'])) { // DISPLAY FIELDS AND DATA OF THE TABLE 
             $table = htmlspecialchars($_GET['table']); 
             $primaryKey = 0; $i = 0; $nameFieldPK = ""; ?>
             
@@ -88,7 +88,7 @@ include('function.php'); ?>
                                 $i++; ?>
                             <td><?=$data?></td>
                         <?php } $i = 0;?>
-                        <td><a href="index.php?modif=<?=$id[$j]?>&table=<?=$table?>#form_entry">Modifier</a></td>
+                        <td><a href="index.php?modif=<?=$id[$j]?>&table=<?=$table?>#form_entry"><i class="fas fa-edit"></i></a></td>
                         <td><a href="index.php?sup=<?=$id[$j]?>&table=<?=$table?>&field_pk=<?=$nameFieldPK?>" class="icon"><i class="fas fa-trash"></i></a></td>
                 </tr> 
                 <?php 
@@ -98,7 +98,7 @@ include('function.php'); ?>
 
             <p class="block has-text-centered"><a href="index.php">Voir les tables (retour)</a></p>
 
-            <?php if(isset($_GET['modif'])) 
+            <?php if(isset($_GET['modif'])) // DISPLAY INFORMATIONS IN FIELDS IF MODIFICATION
                     $theEntry = getEntry($table, $_GET['modif'], $nameFieldPK); ?>
             <hr />
             <div class="columns">
@@ -124,7 +124,7 @@ include('function.php'); ?>
                             <?php }
                         } ?>
                         <input type="hidden" name="table" value="<?=$table?>" />
-                    <?php if(isset($_GET['modif'])) { ?>
+                    <?php if(isset($_GET['modif'])) { // 2 HIDDEN FIELDS IF MODIFICATION AND MODIF BUTTON ?>
                         <input type="hidden" name="fieldPK" value="<?=$nameFieldPK?>" />
                         <input type="hidden" name="id" value="<?=$_GET['modif']?>" />
                         
@@ -139,7 +139,7 @@ include('function.php'); ?>
                                 </div>
                             </div>
                         </div><?php }
-                    else { ?> 
+                    else { // ADD BUTTON ?> 
                     <div class="field is-horizontal">
                             <div class="field-label">
                             </div>
@@ -151,7 +151,7 @@ include('function.php'); ?>
                                 </div>
                             </div>
                         </div>
-                                        <?php } ?>
+                     <?php } ?>
                         </div>
                     </form>
                 </div>
@@ -164,21 +164,23 @@ include('function.php'); ?>
             
                 if(isset($_POST['ip']))
                     extract($_POST);
-                if(isset($_SESSION['ip']))
-                    extract($_SESSION); ?>
+                elseif(isset($_SESSION['ip']))
+                    extract($_SESSION); 
+                    
+                    $bdd_tables = getTables($ip, $bdd, $user, $pass); 
+                    if($bdd_tables == null)
+                        header('location:index.php'); ?>
+
             <div class="columns">
                     <div class="column is-4 is-offset-4">
                         <h2 class="title has-text-centered">Choisir une table de <?= $bdd ?></h2>
-                        
-                        <?php $bdd = getTables($ip, $bdd, $user, $pass); ?>
-                    
-                        
+                         
                         <table class="table is-bordered is-striped is-fullwidth">
                             <tr>
                                 <th>Table</th><th>Accès</th>
                             </tr>
 
-                            <?php while($tables = $bdd->fetch())
+                            <?php while($tables = $bdd_tables->fetch())
                             { ?>
 
                                 <tr>
