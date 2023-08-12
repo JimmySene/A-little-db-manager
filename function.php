@@ -40,7 +40,7 @@ function getEntries($nameTable) // RETURN DATA OF THE TABLE $nameTable
 
     $bdd = new PDO("mysql:host=$ip;dbname=$bdd;charset=utf8",$user,$pass);
     $req = $bdd->prepare("SELECT * FROM $nameTable");
-    $req->execute(array($nameTable));
+    $req->execute();
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
 
     return $result;
@@ -73,9 +73,14 @@ function addEntry($entry) // ADD ENTRY IN THE TABLE $entry['table']
     }
 
     $bdd = new PDO("mysql:host=$ip;dbname=$bdd;charset=utf8",$user,$pass);
-    $bdd->exec("INSERT INTO $nameTable VALUES(null,$string)");
-
-    header("location:index.php?table=$nameTable");
+    $path = "index.php?table=$nameTable";
+    try  {
+        $bdd->exec("INSERT INTO $nameTable VALUES(null,$string)");
+    } catch (Exception $e) {
+        $path .= "&error";
+    }
+    
+    header("location:$path");
 
 }
 
@@ -131,9 +136,14 @@ function modifEntry($entry) // MODIF ENTRY IN THE TABLE $entry['table']
 
 
     $bdd = new PDO("mysql:host=$ip;dbname=$bdd;charset=utf8",$user,$pass);
-    $bdd->exec("UPDATE $nameTable SET $string WHERE $nameFieldPK = $id");
-    echo $string;
-    header("location:index.php?table=$nameTable");
+    $path = "index.php?table=$nameTable";
+    try  {
+        $bdd->exec("UPDATE $nameTable SET $string WHERE $nameFieldPK = $id");
+    } catch (Exception $e) {
+        $path .= "&error";
+    }
+    
+    header("location:$path");
 
 }
 

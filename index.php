@@ -1,5 +1,5 @@
 <?php session_start();
-//session_destroy();
+
 include('function.php'); ?>
 
 <!DOCTYPE html>
@@ -46,6 +46,10 @@ include('function.php'); ?>
             
       
             <h2 class="title has-text-centered">Table <?=$table?> de <?=$_SESSION['bdd']?></h2>
+
+            <?php if(isset($_GET["error"])) { ?>
+                <p class="block has-text-centered error"><b>Erreur :</b> Une ou plusieurs données ne correpondent pas aux types attendus par la table. Veuillez réessayer.</p>
+            <?php } ?>
            
             <p class="block has-text-centered"><a href="index.php?table=<?=$table?>#footer">Aller tout en bas</a></p>
 
@@ -65,7 +69,7 @@ include('function.php'); ?>
                     <th>
                         <?=$field['Field']?>
                     </th>
-                <?php } ?>
+        <?php } ?>
 
                     <th>Modifier</th>
                     <th>Supprimer</th>
@@ -105,7 +109,8 @@ include('function.php'); ?>
                 <div class="column is-5 is-offset-3">
                     <form action="index.php" method="post" id="form_entry">
                     
-                        <?php foreach($fields as $field) { 
+                        <?php
+                        foreach($fields as $field) { 
                                 if($field['Key'] != 'PRI') { // CHECK IF FIELD IS NOT PRIMARY KEY 
                                 $nameField = $field['Field']?>
                                 <div class="field is-horizontal">
@@ -115,7 +120,12 @@ include('function.php'); ?>
                                     <div class="field-body">
                                         <div class="field">
                                             <div class="control">
-                                                    <input type="text" class="input" name="<?=$nameField?>" id="<?=$nameField?>" 
+                                                    <input type="<?php if(in_array($field["Type"], ["tinyint", "smallint", "mediumint", "int", "bigint", "float", "double"])) echo 'number';
+                                                    else echo 'text'; ?>" 
+                                                    placeholder="<?php if($field["Type"] === "date") echo 'YYYY-MM-JJ';
+                                                    else if($field["Type"] === "datetime") echo 'YYYY-MM-JJ hh:mm:ss'?>"
+                                                    <?php if($field["Null"] === "NO") echo "required"; ?>
+                                                    class="input" name="<?=$nameField?>" id="<?=$nameField?>"
                                                 value="<?php if(isset($_GET['modif'])) { echo $theEntry[$nameField]; } ?>" />
                                             </div>
                                         </div>
@@ -206,25 +216,25 @@ include('function.php'); ?>
                             <div class="field">
                                 <label for="ip" class="label">Adresse IP</label>
                                 <div class="control">
-                                    <input type="text" name="ip" class="input" />
+                                    <input type="text" name="ip" class="input" value="127.0.0.1" placeholder="127.0.0.1" required onclick="this.value = ''" />
                                 </div>
                             </div>
                             <div class="field">
                                 <label for="bdd" class="label">Nom de la Base </label>
                                 <div class="control">
-                                    <input type="text" name="bdd" class="input"/>
+                                    <input type="text" name="bdd" class="input" required />
                                 </div>
                             </div>
                             <div class="field">
                                 <label for="user" class="label">Utilisateur</label>
                                 <div class="control">
-                                    <input type="text" name="user" class="input" />
+                                    <input type="text" name="user" class="input" required />
                                 </div>
                             </div>
                             <div class="field">
                                 <label for="pass" class="label">Mot de passe</label>
                                 <div class="control">
-                                    <input type="password" name="pass" class="input" />
+                                    <input type="password" name="pass" class="input" required />
                                 </div>
                             </div>
                             <div class="field">
@@ -241,7 +251,7 @@ include('function.php'); ?>
         </div>
         <footer id="footer" class="footer">
             <div class="content has-text-centered">
-                <p>A little DB Manager &copy; 2018 - Sené Jimmy - all rights diserved.</p>
+                <p>&copy; A little DB Manager ; 2018 - 2023 ; créé par par <a href="https://github.com/JimmySene/">J.S</a></p>
                 <p><i class="fab fa-github"></i> <a href="https://github.com/JimmySene/a-little-db-manager">GitHub</a></p>
                 <p><a href="https://bulma.io"><img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="128" height="24"></a></p>
             </div>

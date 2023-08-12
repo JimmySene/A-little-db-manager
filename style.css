@@ -28,3 +28,8 @@ h2{
 footer {
     margin-top : 90px;
 }
+
+.error {
+    color : #ff3860;
+    font-style : italic;
+}
